@@ -31,3 +31,67 @@ def forward_kinematics(DH):
         T = torch.matmul(T, A)
     
     return T
+
+# weight initialization
+def weights_init_uniform_rule(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0/np.sqrt(n)
+        m.weight.data.uniform_(-y, y)
+        m.bias.data.fill_(0)
+
+
+def weights_init_normal_rule(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0/np.sqrt(n)
+        m.weight.data.normal_(0.0,y)
+        m.bias.data.fill_(0)
+
+
+def weights_init_xavier_uniform_rule(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0/np.sqrt(n)        
+        nn.init.xavier_normal_(m.weight.data, gain=nn.init.calculate_gain('relu'))
+        m.bias.data.fill_(0)
+
+def weights_init_xavier_normal_rule(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0/np.sqrt(n)
+        nn.init.xavier_normal_(m.weight.data)
+        m.bias.data.fill_(0)
+
+
+def weights_init_xavier_kaiming_uniform_rule(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0/np.sqrt(n)
+        nn.init.kaiming_uniform_(m.weight.data)
+        m.bias.data.fill_(0)
+
+def weights_init_xavier_kaiming_normal_rule(m):
+    classname = m.__class__.__name__
+    # for every Linear layer in a model..
+    if classname.find('Linear') != -1:
+        # get the number of the inputs
+        n = m.in_features
+        y = 1.0/np.sqrt(n)
+        nn.init.kaiming_normal_(m.weight.data)
+        m.bias.data.fill_(0)
