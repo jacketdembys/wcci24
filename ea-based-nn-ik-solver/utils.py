@@ -6,10 +6,15 @@ import matplotlib.pyplot as plt
 # get DH matrix based on robot choice
 def get_DH(robot_choice, t):
     # columns: t, d, a, alpha
-    if robot_choice == "3DoF-R":
+    if robot_choice == "3DoF-3R":
         DH = torch.tensor([[t[0], 0, 1, 0],
                            [t[1], 0, 1, torch.pi/2],
                            [t[2], 0, 0, 0]])
+    elif robot_choice == "4DoF-2RPR":
+        DH = torch.tensor([[t[0], 400/1000, 250/1000, 0],
+                           [t[1],        0, 150/1000, torch.pi],
+                           [   0,     t[2],        0, 0],
+                           [t[3], 150/1000,        0, 0]])
     return DH
 
 # A matrix
