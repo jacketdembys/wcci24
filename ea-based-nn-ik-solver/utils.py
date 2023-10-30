@@ -22,6 +22,13 @@ def get_DH(robot_choice, t):
                            [t[1],        0, 150/1000, torch.pi],
                            [   0,     t[2],        0, 0],
                            [t[3], 150/1000,        0, 0]])
+    elif robot_choice == "6DoF-6R-Puma260":
+        DH = torch.tensor([[t[0],           0,          0,        -torch.pi/2],
+                           [t[1],  125.4/1000, 203.2/1000,                  0],
+                           [t[2],           0,  -7.9/1000,         torch.pi/2],
+                           [t[3],  203.2/1000,          0,        -torch.pi/2],
+                           [t[4],           0,          0,         torch.pi/2],
+                           [t[5],   63.5/1000,          0,                  0]])
     elif robot_choice == "7DoF-7R":
         DH = torch.tensor([[t[0], 400/1000, 250/1000, 0],
                            [t[1],        0, 150/1000, torch.pi],
