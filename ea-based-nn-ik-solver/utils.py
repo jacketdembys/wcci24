@@ -426,22 +426,34 @@ def load_dataset(data, n_DoF, batch_size, robot_choice):
     if robot_choice == "6DoF-6R-Puma260":
         X = data[:,:6]
         y = data[:,6:]
+    if robot_choice == "7DoF-7R-Panda":
+        X = data[:,:6]
+        y = data[:,6:]
 
         
     #y = data[:,:2]
     #X = data[:,2:]
         
     # split in train and test sets
-    X_train_i, X_test_i, y_train_i, y_test_i = train_test_split(X, 
+    X_train, X_validate, y_train, y_validate = train_test_split(X, 
                                                                 y, 
                                                                 test_size = 0.1,
                                                                 random_state = 1)
 
+
+
+    X_train, X_test, y_train, y_test = train_test_split(X_train, 
+                                                        y_train, 
+                                                        test_size = 0.1,
+                                                        random_state = 1)
+
+
     sc_in = MinMaxScaler(copy=True, feature_range=(0, 1))
     sc_out = MinMaxScaler(copy=True, feature_range=(0, 1))
     
-    X_train = sc_in.fit_transform(X_train_i)
-    X_test = sc_in.transform(X_test_i)  
+    X_train = sc_in.fit_transform(X_train)
+    X_validate = sc_in.transform(X_validate) 
+    X_test = sc_in.transform(X_test)  
     
     #xx = torch.from_numpy(X_train)
     #xx = xx
@@ -459,10 +471,10 @@ def load_dataset(data, n_DoF, batch_size, robot_choice):
     #y_test = sc_out.transform(y_test) 
 
     print("==> Shape X_train: ", X_train.shape)
-    print("==> Shape y_train: ", y_train_i.shape)
+    print("==> Shape y_train: ", y_train.shape)
 
-    train_data = LoadIKDataset(X_train, y_train_i)
-    test_data = LoadIKDataset(X_test, y_test_i)
+    train_data = LoadIKDataset(X_train, y_train)
+    test_data = LoadIKDataset(X_validate, y_validate)
 
     train_data_loader = DataLoader(dataset=train_data,
                                    batch_size=batch_size,
@@ -473,7 +485,7 @@ def load_dataset(data, n_DoF, batch_size, robot_choice):
                                    batch_size=1,
                                    shuffle=False)
 
-    return train_data_loader, test_data_loader, X_test_i, y_test_i, X_train, y_train_i
+    return train_data_loader, test_data_loader, X_validate, y_validate, X_train, y_train, X_test, y_test 
 
 # train function
 def train(model, iterator, optimizer, criterion, criterion_type, batch_size, device, epoch, EPOCHS):

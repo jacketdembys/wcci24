@@ -3,15 +3,16 @@ import os
 
 
 layers = 1
-neurons = 10
+neurons = 1000
+robot_choice = '7DoF-7R-Panda'
 
 # read from path script
-for scale in range(1,11,1):
+for scale in range(2,12,2):
 
     # build the content of the config file in a dictionary
     config_info = {
             'NUM_EXPERIMENT_REPETITIONS': 1,
-            'ROBOT_CHOICE': '6DoF-6R-Puma260',
+            'ROBOT_CHOICE': robot_choice,
             'SEED_CHOICE': True,
             'SEED_NUMBER': 0,
             'DEVICE_ID': 0,
@@ -30,7 +31,7 @@ for scale in range(1,11,1):
                     'RESUMED_G_MODEL': "",
                 },
                 'HYPERPARAMETERS': {
-                    'EPOCHS': 100000,
+                    'EPOCHS': 10000,
                     'BATCH_SIZE': 128,
                     'SHUFFLE': True,
                     'NUM_WORKERS': 4,
@@ -45,12 +46,12 @@ for scale in range(1,11,1):
                     'LOSS': 'l2',
                 },
                 'PRINT_EPOCHS': True,
-                'PRINT_STEPS': 100
+                'PRINT_STEPS': 10
             },
     }
 
 
-    save_path = "config_layers_"+str(int(layers))+"_neurons_"+str(int(neurons))
+    save_path = "configs/"+robot_choice+"/config_layers_"+str(int(layers))+"_neurons_"+str(int(neurons))
     if not os.path.exists(save_path):
                 os.makedirs(save_path)
 
