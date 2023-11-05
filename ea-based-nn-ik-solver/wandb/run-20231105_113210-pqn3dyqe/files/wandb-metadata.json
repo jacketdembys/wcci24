@@ -1,0 +1,87 @@
+{
+    "os": "Linux-5.15.0-84-generic-x86_64-with-debian-bookworm-sid",
+    "python": "3.7.13",
+    "heartbeatAt": "2023-11-05T17:32:13.071300",
+    "startedAt": "2023-11-05T17:32:10.741988",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--projectname",
+        "testga",
+        "--runname",
+        "test1",
+        "--robotchoice",
+        "3DoF-3R",
+        "--modelname",
+        "torch",
+        "--seed"
+    ],
+    "state": "running",
+    "program": "run_ga_torch.py",
+    "codePath": "ea-based-nn-ik-solver/run_ga_torch.py",
+    "git": {
+        "remote": "git@github.com:jacketdembys/wcci24.git",
+        "commit": "657ee5074cfaad53bc5cdef960c286b29a71feb7"
+    },
+    "email": "mohamadali.tousi@gmail.com",
+    "root": "/home/macula/SMATousi/WCCI24/wcci24",
+    "host": "macula",
+    "username": "SMATousi",
+    "executable": "/home/macula/SMATousi/.conda/envs/mac-deep/bin/python",
+    "cpu_count": 4,
+    "cpu_count_logical": 8,
+    "cpu_freq": {
+        "current": 2921.635375,
+        "min": 800.0,
+        "max": 4000.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3400.0,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 3400.0,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 1616.475,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 3400.0,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 3400.0,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 2809.879,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 1946.729,
+            "min": 800.0,
+            "max": 4000.0
+        },
+        {
+            "current": 3400.0,
+            "min": 800.0,
+            "max": 4000.0
+        }
+    ],
+    "disk": {
+        "total": 91.10879898071289,
+        "used": 69.21785354614258
+    },
+    "memory": {
+        "total": 31.282196044921875
+    }
+}

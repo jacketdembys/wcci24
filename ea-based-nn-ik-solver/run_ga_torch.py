@@ -75,11 +75,11 @@ if args.seed:
 
 
 # robot_choice = "3DoF-3R"
-if robot_choice == "3DoF-3R":
+if arg_robotchoice == "3DoF-3R":
     n_DoF = 3
     input_dim = 2
     output_dim = 3
-data = pd.read_csv('data_'+robot_choice+'.csv')
+data = pd.read_csv('data_'+arg_robotchoice+'.csv')
 
 
 
@@ -176,7 +176,7 @@ def fitness_func(ga_instance, solution, sol_idx):
     model.load_state_dict(model_weights_dict)
 
     predictions = model(data_inputs)
-    X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
+    X_pred = reconstruct_pose(predictions.detach().numpy(), arg_robotchoice)
     data_outputs = data_outputs.float()
     X_pred = torch.from_numpy(X_pred)
     # print(X_pred.shape)
