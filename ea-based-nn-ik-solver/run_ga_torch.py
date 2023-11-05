@@ -79,7 +79,7 @@ if arg_robotchoice == "3DoF-3R":
     n_DoF = 3
     input_dim = 2
     output_dim = 3
-data = pd.read_csv('data_'+arg_robotchoice+'.csv')
+data = pd.read_csv('datasets/6DoF-6R-Puma260/data_'+arg_robotchoice+'.csv')
 
 
 
