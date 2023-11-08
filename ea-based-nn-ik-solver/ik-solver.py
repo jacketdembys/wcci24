@@ -1,6 +1,6 @@
 # Libraries
 # import libraries
-from mpl_toolkits.mplot3d import Axes3D
+#from mpl_toolkits.mplot3d import Axes3D
 
 import torch
 import torch.nn as nn
@@ -16,7 +16,7 @@ import math
 import matplotlib.pyplot as plt
 #import os
 import sys
-import wandb
+#import wandb
 import yaml
 
 from sklearn.preprocessing import MinMaxScaler
@@ -27,7 +27,7 @@ from sklearn import decomposition
 from sklearn import manifold
 from tqdm import tqdm
 from scipy import stats
-from torchviz import make_dot
+#from torchviz import make_dot
 from utils import *
 
 if __name__ == '__main__':
@@ -101,10 +101,15 @@ if __name__ == '__main__':
     neurons = config["MODEL"]["NUM_HIDDEN_NEURONS"]   
 
 
+    # set the hidden layer array to initialize the architecture
     hidden_layer_sizes = np.zeros((1,layers))          
     
-    for neuron in range(100, neurons+100, 100):
+    for neuron in range(200, neurons+100, 100):
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 33d473f (running with a bigger dataset)
         hidden_layer_sizes[:,:] = neuron
         hidden_layer_sizes = hidden_layer_sizes.squeeze(0).astype(int).tolist()
 
@@ -248,6 +253,9 @@ if __name__ == '__main__':
             
             if print_epoch:
                 print('\nEnd of Training for {} - Elapsed Time: {}m {}s'.format(model.name, epoch_mins, epoch_secs))    
+        
+        print("Resetting the architecture ...\n\n")
+        hidden_layer_sizes = np.zeros((1,layers))
             
         print("Resetting the architecture ...\n\n")
         hidden_layer_sizes = np.zeros((1,layers))

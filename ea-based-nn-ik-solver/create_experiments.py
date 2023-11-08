@@ -2,6 +2,7 @@ import yaml
 import os
 
 
+gpu_id = 0
 layers = 1
 neurons = 1000
 robot_choice = '7DoF-7R-Panda'
@@ -15,7 +16,7 @@ for scale in range(2,12,2):
             'ROBOT_CHOICE': robot_choice,
             'SEED_CHOICE': True,
             'SEED_NUMBER': 0,
-            'DEVICE_ID': 0,
+            'DEVICE_ID': int(gpu_id),
             'MODEL': {
                 'NAME': 'MLP',
                 'NUM_HIDDEN_LAYERS': layers,          

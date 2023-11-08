@@ -1,0 +1,74 @@
+%% Prepare workspace
+clc, clear, close all
+
+%% Learn about Gauss-Newton method
+% x = [0;0.11;0.18;0.25;0.32;0.44;0.55;0.61;0.68;0.80;0.92;1.01;1.12;1.22;1.35;1.45;1.60;1.67;1.76;1.83;2];
+% y = [1.03;0.78;0.62;0.22;0.05;-0.20;-0.45;-0.50;-0.45;-0.31;-0.21;-0.11;0.05;0.12;0.20;0.23;0.15;0.08;-0.01;-0.1;-0.18];
+% 
+% a = GaussNewton(x,y);
+% a0 = a(1);
+% a1 = a(2);
+% xx = linspace(min(x), max(x), 100);
+% yy = exp(-a0*xx).*cos(a1*xx);
+% 
+% 
+% figure(1)
+% hold on
+% plot(x,y,'ro')
+% plot(xx,yy,'k-')
+% legend("original data", "fitted data")
+% title({'Gauss Newton Method'},{'for Non-Linear Least-Squares Optimization'})
+% text(0.5,0.6,['f(x) = exp(-',num2str(round(a0,3)),'x).cos(',num2str(round(a1,3)),'x)'], 'FontSize', 12)
+% hold off
+% 
+% 
+% function a = GaussNewton(x,y)
+% 
+%     tol         = 0.001;        % tolerance
+%     a           = [2,3];        % initial value [a0, a1]
+%     iter_max    = 50;           % maximum iteration number
+%     n           = length(x);    % number of data points
+% 
+%     j = zeros(n,2);
+%     f = zeros(n,1);
+%     d = zeros(n,1);
+%     fprintf('Iter, a0, a1, da0, da1\n')
+%     for iter = 1:iter_max
+%         
+%         a0 = a(1);
+%         a1 = a(2);
+%         
+%         for i = 1:n
+%             f(i) = exp(-a0*x(i)).*cos(a1*x(i));
+%             j(i,1) = -x(i).*exp(-a0*x(i)).*cos(a1*x(i));
+%             j(i,2) = -x(i).*exp(-a0*x(i)).*sin(a1*x(i));
+%             d(i) = y(i) - f(i); 
+%         end
+%         
+%         %da = (j'*j)\(j'*d);
+%         da = pinv(j)*d;
+%         a = a + da;
+%         
+%         fprintf('%d, %.3f, %.3f, %.3f, %.3f\n', iter, a(1), a(2), da(1), da(2))
+%         
+%         if (abs(da(1)) < tol && abs(da(2)) < tol)
+%             fprintf('Gauss-Newton method has converged\n')
+%             break
+%         end
+%             
+%     end    
+%     
+% end
+
+
+
+J = rand(6,9)
+
+J(:,2) = 10*J(:,2) 
+
+J(:,3) = 100*J(:,2)
+
+J(:,4) = 10*J(:,2)
+
+
+
