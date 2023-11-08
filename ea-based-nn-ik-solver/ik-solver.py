@@ -105,7 +105,7 @@ if __name__ == '__main__':
     
     for neuron in range(100, neurons+100, 100):
 
-        hidden_layer_sizes[:] = neuron
+        hidden_layer_sizes[:,:] = neuron
         hidden_layer_sizes = hidden_layer_sizes.squeeze(0).astype(int).tolist()
 
         for experiment_number in range(experiments):
@@ -249,7 +249,10 @@ if __name__ == '__main__':
             if print_epoch:
                 print('\nEnd of Training for {} - Elapsed Time: {}m {}s'.format(model.name, epoch_mins, epoch_secs))    
             
-                
+        print("Resetting the architecture ...\n\n")
+        hidden_layer_sizes = np.zeros((1,layers))
+            
+                         
 
 
 
