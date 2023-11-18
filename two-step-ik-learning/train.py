@@ -5,7 +5,7 @@ from data_loading import *
     This module trains the first step of the idea
     which is training a network on Forward Kinematics
     and using that later in the second stage.
-    
+
 """
 
 robot_choice = "3DoF-3R"
@@ -16,7 +16,7 @@ FK_train_loader, FK_test_loader, input_size, output_size = data_loader(robot_cho
 
 
 input_size = input_size
-hidden_sizes = [64, 128]
+hidden_sizes = [32, 64, 128, 64]
 output_size = output_size
 learning_rate = 0.0001
 num_epochs = 100
@@ -62,6 +62,6 @@ with torch.no_grad():
 mean_loss = np.mean(np.array(mean_loss))
 print(f'Test Error: {mean_loss}')
 
-model_weights_path = './model_weights/test_1.pth'
+model_weights_path = './model_weights/test_2.pth'
 # Save the model's state_dict to the specified path
 torch.save(model.state_dict(), model_weights_path)

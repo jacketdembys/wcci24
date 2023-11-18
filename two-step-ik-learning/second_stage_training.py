@@ -21,9 +21,9 @@ IKFK_train_loader, IKFK_test_loader, pos_shape, joints_shape = data_loader(robot
 input_size = pos_shape
 middle_state_size = joints_shape
 s1_hidden_list = [32, 64, 128]
-s2_hidden_list = [64, 128]
+s2_hidden_list = [32, 64, 128, 64]
 output_size = pos_shape
-second_network_path = './model_weights/test_1.pth'  # Replace with actual path
+second_network_path = './model_weights/test_2.pth'  # Replace with actual path
 
 # Initialize the network
 my_network = IK_Network(input_size, s1_hidden_list, s2_hidden_list, middle_state_size, output_size, second_network_path)
