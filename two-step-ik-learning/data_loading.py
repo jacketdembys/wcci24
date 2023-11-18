@@ -80,6 +80,6 @@ def data_loader(robot_choice, mode_choice, test_size, batch_size, shuffle=False)
             IKFK_test_dataset = CustomDataset(IKFK_X_test, IKFK_y_test)
             IKFK_test_loader = DataLoader(IKFK_test_dataset, batch_size=batch_size, shuffle=shuffle)
 
-            return IKFK_train_loader, IKFK_test_loader, pos.shape[1], pos.shape[1]
+            return IKFK_train_loader, IKFK_test_loader, pos.shape[1], joints.shape[1]
 
 

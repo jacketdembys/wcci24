@@ -1,41 +1,48 @@
 from model import *
 from data_loading import *
 
+
 """
-    This module trains the first step of the idea
-    which is training a network on Forward Kinematics
-    and using that later in the second stage.
-    
+    This module is for second step training
+    that is the idea of training a network 
+    to solve the inverse kinematics, optimized
+    in the cartesian space, using a pre-trained 
+    network on Forward Kinematics.
+
 """
 
 robot_choice = "3DoF-3R"
-mode_choice = "FK"
+mode_choice = "IKFK"
 test_size = 0.2
 batch_size = 32
-FK_train_loader, FK_test_loader, input_size, output_size = data_loader(robot_choice, mode_choice, test_size, batch_size)
+IKFK_train_loader, IKFK_test_loader, pos_shape, joints_shape = data_loader(robot_choice, mode_choice, test_size, batch_size)
 
 
-input_size = input_size
-hidden_sizes = [64, 128]
-output_size = output_size
+input_size = pos_shape
+middle_state_size = joints_shape
+s1_hidden_list = [32, 64, 128]
+s2_hidden_list = [64, 128]
+output_size = pos_shape
+second_network_path = './model_weights/test_1.pth'  # Replace with actual path
+
+# Initialize the network
+my_network = IK_Network(input_size, s1_hidden_list, s2_hidden_list, middle_state_size, output_size, second_network_path)
+
+# print("Done!")
 learning_rate = 0.0001
 num_epochs = 100
-
-model = MLP(input_size, hidden_sizes, output_size)
 criterion = nn.MSELoss()
 test_criterion = nn.L1Loss()
-optimizer = optim.Adam(model.parameters(), lr=learning_rate)
-
-
+optimizer = optim.Adam(my_network.parameters(), lr=learning_rate)
 
 # Training loop
 for epoch in range(num_epochs):
-    for batch in FK_train_loader:
+    for batch in IKFK_train_loader:
         inputs = batch['data']
         labels = batch['targets'].squeeze()
         
         # Forward pass
-        outputs = model(inputs)
+        outputs = my_network(inputs)
         loss = test_criterion(outputs, labels)
         
         # Backward pass and optimization
@@ -46,15 +53,15 @@ for epoch in range(num_epochs):
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
 # Testing the model
-model.eval()
+my_network.eval()
 correct = 0
 total = 0
 mean_loss = []
 with torch.no_grad():
-    for batch in FK_test_loader:
+    for batch in IKFK_test_loader:
         inputs = batch['data']
         labels = batch['targets'].squeeze()
-        outputs = model(inputs)
+        outputs = my_network(inputs)
 #         _, predicted = torch.max(outputs.data, 1)
         loss = test_criterion(outputs, labels)
         mean_loss.append(loss.item())
@@ -62,6 +69,8 @@ with torch.no_grad():
 mean_loss = np.mean(np.array(mean_loss))
 print(f'Test Error: {mean_loss}')
 
-model_weights_path = './model_weights/test_1.pth'
-# Save the model's state_dict to the specified path
-torch.save(model.state_dict(), model_weights_path)
+
+
+
+
+
