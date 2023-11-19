@@ -30,7 +30,7 @@ my_network = IK_Network(input_size, s1_hidden_list, s2_hidden_list, middle_state
 
 # print("Done!")
 learning_rate = 0.0001
-num_epochs = 100
+num_epochs = 300
 criterion = nn.MSELoss()
 test_criterion = nn.L1Loss()
 optimizer = optim.Adam(my_network.parameters(), lr=learning_rate)
