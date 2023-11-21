@@ -16,12 +16,18 @@ FK_train_loader, FK_test_loader, input_size, output_size = data_loader(robot_cho
 
 
 input_size = input_size
-hidden_sizes = [32, 64, 128, 64]
+hidden_sizes = [64, 64, 64, 64]
 output_size = output_size
 learning_rate = 0.0001
-num_epochs = 100
+num_epochs = 300
 
-model = MLP(input_size, hidden_sizes, output_size)
+model_choice = "ResMLP"
+
+if model_choice == "MLP":
+    model = MLP(input_size, hidden_sizes, output_size)
+elif model_choice == "ResMLP":
+    model = ResMLP(input_size, hidden_sizes, output_size)
+
 criterion = nn.MSELoss()
 test_criterion = nn.L1Loss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
@@ -62,6 +68,6 @@ with torch.no_grad():
 mean_loss = np.mean(np.array(mean_loss))
 print(f'Test Error: {mean_loss}')
 
-model_weights_path = './model_weights/test_2.pth'
+model_weights_path = './model_weights/Res_MLP_Test_1.pth'
 # Save the model's state_dict to the specified path
 torch.save(model.state_dict(), model_weights_path)

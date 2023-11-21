@@ -27,7 +27,7 @@ class IK_Network(nn.Module):
         self.mlp1 = MLP(input_size, s1_hudden_list, middle_state_size)  # Example hidden sizes
 
         # The second MLP maps middle states to outputs
-        self.mlp2 = MLP(middle_state_size, s2_hidden_list, output_size)  # Example hidden sizes
+        # self.mlp2 = MLP(middle_state_size, s2_hidden_list, output_size)  # Example hidden sizes
 
         # self.resmlp = ResMLP(middle_state_size, s2_hidden_list, output_size)
 
@@ -41,7 +41,7 @@ class IK_Network(nn.Module):
         
         if model_choice == "ResMLP":
             self.second_net = ResMLP(middle_state_size, s2_hidden_list, output_size)
-            self.resmlp.load_state_dict(torch.load(second_network_path))
+            self.second_net.load_state_dict(torch.load(second_network_path))
             for param in self.second_net.parameters():
                 param.requires_grad = False
 
@@ -49,7 +49,7 @@ class IK_Network(nn.Module):
     def forward(self, x):
         middle_state = self.mlp1(x)
         output = self.second_net(middle_state)
-        return output
+        return output, middle_state
     
 
 
@@ -92,6 +92,6 @@ class ResMLP(nn.Module):
         o = self.output_fc(h3+h2+h1)
         x_temp = o
 
-        return o, x_temp 
+        return o 
     
 

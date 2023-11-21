@@ -1,7 +1,20 @@
 from model import *
 from data_loading import *
 from utils import *
+import wandb
 
+wandb.init(
+        # set the wandb project where this run will be logged
+        project="2-Step-IK-Sover", name="Test1"
+        
+        # track hyperparameters and run metadata
+    #     config={
+    #     "learning_rate": 0.02,
+    #     "architecture": "CNN",
+    #     "dataset": "CIFAR-100",
+    #     "epochs": 20,
+    #     }
+    )
 
 """
     This module is for second step training
@@ -54,30 +67,32 @@ for epoch in range(num_epochs):
     
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}')
 
-# Testing the model
-my_network.eval()
-correct = 0
-total = 0
-mean_loss_dh = []
-mean_loss_n = []
-with torch.no_grad():
-    for batch in IKFK_test_loader:
-        inputs = batch['data']
-        labels = batch['targets'].squeeze()
-        outputs, middle_state = my_network(inputs)
-#         _, predicted = torch.max(outputs.data, 1)
-        rec_pose = reconstruct_pose(middle_state, robot_choice)
-        # print(labels.shape)
-        # print(rec_pose.shape)
-        loss_dh = test_criterion(rec_pose, labels)
-        loss_n = test_criterion(outputs, labels)
-        mean_loss_dh.append(loss_dh.item())
-        mean_loss_n.append(loss_n.item())
-#         correct += (predicted == labels).sum().item()
-mean_loss_n = np.mean(np.array(mean_loss_n))
-mean_loss_dh = np.mean(np.array(mean_loss_dh))
-print(f'DH Test Error: {mean_loss_dh}')
-print(f'Network Test Error: {mean_loss_n}')
+    # Testing the model
+    my_network.eval()
+    correct = 0
+    total = 0
+    mean_loss_dh = []
+    mean_loss_n = []
+    with torch.no_grad():
+        for batch in IKFK_test_loader:
+            inputs = batch['data']
+            labels = batch['targets'].squeeze()
+            outputs, middle_state = my_network(inputs)
+    #         _, predicted = torch.max(outputs.data, 1)
+            rec_pose = reconstruct_pose(middle_state, robot_choice)
+            # print(labels.shape)
+            # print(rec_pose.shape)
+            loss_dh = test_criterion(rec_pose, labels)
+            loss_n = test_criterion(outputs, labels)
+            mean_loss_dh.append(loss_dh.item())
+            mean_loss_n.append(loss_n.item())
+    #         correct += (predicted == labels).sum().item()
+            
+    mean_loss_n = np.mean(np.array(mean_loss_n))
+    mean_loss_dh = np.mean(np.array(mean_loss_dh))
+    wandb.log({"Metrics/test_loss_dh": mean_loss_dh, "Metrics/test_loss_n": mean_loss_n})
+    # print(f'DH Test Error: {mean_loss_dh}')
+    # print(f'Network Test Error: {mean_loss_n}')
 
 
 
