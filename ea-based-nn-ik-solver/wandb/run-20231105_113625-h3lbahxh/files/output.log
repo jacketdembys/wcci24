@@ -1,0 +1,28 @@
+(9000, 2)
+(9000, 3)
+Generation = 1
+Fitness    = -0.4112589657306671
+Generation = 2
+Fitness    = -0.4112589657306671
+Generation = 3
+Fitness    = -0.4112589657306671
+Traceback (most recent call last):
+  File "run_ga_torch.py", line 264, in <module>
+    ga_instance.run()
+  File "/home/macula/SMATousi/.conda/envs/mac-deep/lib/python3.7/site-packages/pygad/pygad.py", line 2127, in run
+    r = self.on_generation(self)
+  File "run_ga_torch.py", line 194, in callback_generation
+    wandb.log({"Metrics/Generation": ga_instance.generations_completed, "Metrics/Fitness": ga_instance.best_solution()[1]})
+  File "/home/macula/SMATousi/.conda/envs/mac-deep/lib/python3.7/site-packages/pygad/pygad.py", line 2197, in best_solution
+    pop_fitness = self.cal_pop_fitness()
+  File "/home/macula/SMATousi/.conda/envs/mac-deep/lib/python3.7/site-packages/pygad/pygad.py", line 1688, in cal_pop_fitness
+    fitness = self.fitness_func(self, sol, sol_idx)
+  File "run_ga_torch.py", line 179, in fitness_func
+    X_pred = reconstruct_pose(predictions.detach().numpy(), arg_robotchoice)
+  File "run_ga_torch.py", line 135, in reconstruct_pose
+    T = forward_kinematics(DH)
+  File "/home/macula/SMATousi/WCCI24/wcci24/ea-based-nn-ik-solver/utils.py", line 75, in forward_kinematics
+    A = A_matrix(*DH[i,:])
+  File "/home/macula/SMATousi/WCCI24/wcci24/ea-based-nn-ik-solver/utils.py", line 66, in A_matrix
+    [           0,                           0,                           0,              1]])
+KeyboardInterrupt
