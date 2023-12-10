@@ -44,6 +44,13 @@ class IK_Network(nn.Module):
             self.second_net.load_state_dict(torch.load(second_network_path))
             for param in self.second_net.parameters():
                 param.requires_grad = False
+        
+        if model_choice == "Jacket-MLP":
+            self.second_net = Jacket_MLP(middle_state_size, s2_hidden_list, output_size)
+            self.second_net.load_state_dict(torch.load(second_network_path))
+            # Freeze the second network
+            for param in self.second_net.parameters():
+                param.requires_grad = False
 
 
     def forward(self, x):
@@ -95,3 +102,40 @@ class ResMLP(nn.Module):
         return o 
     
 
+
+class Jacket_MLP(nn.Module):
+
+    def __init__(self, input_dim, h_sizes, output_dim):
+        super().__init__()
+        self.name = "MLP [{}, {}, {}]".format(str(input_dim), str(h_sizes).replace("[","").replace("]",""), str(output_dim))
+        self.input_dim = input_dim
+        self.h_sizes = h_sizes
+        self.output_dim = output_dim     
+        self.input_fc = nn.Linear(self.input_dim, self.h_sizes[0])
+        self.relu_activation = nn.ReLU()      
+        self.hidden_fc = nn.ModuleList()
+
+        for i in range(len(self.h_sizes)-1):
+
+            self.hidden_fc.append(nn.Linear(self.h_sizes[i], self.h_sizes[i+1]))
+
+        
+
+        self.output_fc = nn.Linear(self.h_sizes[len(self.h_sizes)-1], self.output_dim)
+
+
+
+        
+
+        
+
+    def forward(self, x):
+        x = self.input_fc(x)
+        x = self.relu_activation(x)
+        for i in range(len(self.h_sizes)-1):
+            x = self.hidden_fc[i](x)
+            x = self.relu_activation(x)
+        x = self.output_fc(x)
+        x_temp = x
+        
+        return x

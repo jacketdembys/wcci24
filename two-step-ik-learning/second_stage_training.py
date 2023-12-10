@@ -21,18 +21,18 @@ IKFK_train_loader, IKFK_test_loader, pos_shape, joints_shape = data_loader(robot
 
 input_size = pos_shape
 middle_state_size = joints_shape
-s1_hidden_list = [32, 64, 128]
-s2_hidden_list = [64, 64, 64, 64]
-second_model_choice = "ResMLP"
+s1_hidden_list = [64, 64, 64]
+s2_hidden_list = [64, 64, 64]
+second_model_choice = "Jacket-MLP"
 output_size = pos_shape
-second_network_path = './model_weights/Res_MLP_Test_1.pth'  # Replace with actual path
+second_network_path = './model_weights/MLP_LS_1.pth'  # Replace with actual path
 
 # Initialize the network
 my_network = IK_Network(input_size, s1_hidden_list, s2_hidden_list, middle_state_size, output_size,second_model_choice, second_network_path)
 
 # print("Done!")
 learning_rate = 0.0001
-num_epochs = 100
+num_epochs = 200
 criterion = nn.MSELoss()
 test_criterion = nn.L1Loss()
 optimizer = optim.Adam(my_network.parameters(), lr=learning_rate)
