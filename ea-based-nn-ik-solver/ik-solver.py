@@ -65,7 +65,7 @@ if __name__ == '__main__':
     print_steps = config["TRAIN"]["PRINT_STEPS"] 
     EPOCHS = config["TRAIN"]["HYPERPARAMETERS"]["EPOCHS"]                         # total training epochs
 
-    
+
 
     
     
@@ -104,13 +104,10 @@ if __name__ == '__main__':
     # set the hidden layer array to initialize the architecture
     hidden_layer_sizes = np.zeros((1,layers))          
     
-    for neuron in range(200, neurons+100, 100):
+    #for neuron in range(800, neurons+100, 100):
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 33d473f (running with a bigger dataset)
-        hidden_layer_sizes[:,:] = neuron
+        hidden_layer_sizes[:,:] = neurons
         hidden_layer_sizes = hidden_layer_sizes.squeeze(0).astype(int).tolist()
 
         for experiment_number in range(experiments):
@@ -188,7 +185,7 @@ if __name__ == '__main__':
             # create a directory to save weights
             save_path = "results/"+robot_choice+"/"+robot_choice+"_" \
                         +model.name.replace(" ","").replace("[","_").replace("]","_").replace(",","-") \
-                        +optimizer_choice+"_"+loss_choice+"_"+str(experiment_number+1)+'_qlim_scale_'+str(int(scale))
+                        +optimizer_choice+"_"+loss_choice+"_"+str(experiment_number+1)+'_qlim_scale_'+str(int(scale))+'_samples_'+str(dataset_samples)
 
             if not os.path.exists(save_path):
                 os.makedirs(save_path)
@@ -254,9 +251,6 @@ if __name__ == '__main__':
             if print_epoch:
                 print('\nEnd of Training for {} - Elapsed Time: {}m {}s'.format(model.name, epoch_mins, epoch_secs))    
         
-        print("Resetting the architecture ...\n\n")
-        hidden_layer_sizes = np.zeros((1,layers))
-            
         print("Resetting the architecture ...\n\n")
         hidden_layer_sizes = np.zeros((1,layers))
             

@@ -3,9 +3,10 @@ import os
 
 
 gpu_id = 0
-layers = 1
+layers = 2
 neurons = 1000
 robot_choice = '7DoF-7R-Panda'
+samples = 10000
 
 # read from path script
 for scale in range(2,12,2):
@@ -24,7 +25,7 @@ for scale in range(2,12,2):
             },             
             'TRAIN': {
                 'DATASET': {
-                    'NUM_SAMPLES': 10000,
+                    'NUM_SAMPLES': int(samples),
                     'JOINT_LIMIT_SCALE': int(scale)
                 },
                 'CHECKPOINT': {
@@ -57,6 +58,6 @@ for scale in range(2,12,2):
                 os.makedirs(save_path)
 
     # open a yaml file and dump the content of the dictionary 
-    with open(save_path+"/train_scale_"+str(int(scale))+".yaml", 'w') as yamlfile:
+    with open(save_path+"/train_scale_"+str(int(scale))+"_samples_"+str(int(samples))+".yaml", 'w') as yamlfile:
         data = yaml.dump(config_info, yamlfile)
         print("Successfully created config files in {}!".format(save_path))

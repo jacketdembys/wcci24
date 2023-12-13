@@ -50,11 +50,14 @@ def get_DH(robot_choice, t):
                            [t[3],  203.2/1000,          0,        -torch.pi/2],
                            [t[4],           0,          0,         torch.pi/2],
                            [t[5],   63.5/1000,          0,                  0]])
-    elif robot_choice == "7DoF-7R":
-        DH = torch.tensor([[t[0], 400/1000, 250/1000, 0],
-                           [t[1],        0, 150/1000, torch.pi],
-                           [   0,     t[2],        0, 0],
-                           [t[3], 150/1000,        0, 0]])
+    elif robot_choice == "7DoF-7R-Panda":
+        DH = torch.tensor([[t[0],    0.333,      0.0,           0],
+                           [t[1],      0.0,      0.0, -torch.pi/2],
+                           [t[2],    0.316,      0.0,  torch.pi/2],
+                           [t[3],      0.0,   0.0825,  torch.pi/2],
+                           [t[4],    0.384,  -0.0825, -torch.pi/2],
+                           [t[5],      0.0,      0.0,  torch.pi/2],
+                           [t[6],    0.107,    0.088,  torch.pi/2]])
     return DH
 
 # A matrix
@@ -487,6 +490,27 @@ def load_dataset(data, n_DoF, batch_size, robot_choice):
 
     return train_data_loader, test_data_loader, X_validate, y_validate, X_train, y_train, X_test, y_test 
 
+
+
+
+
+# function to load the dataset
+def load_test_dataset(X_test, y_test):
+
+    print("==> Shape X_test: ", X_test.shape)
+    print("==> Shape y_test: ", y_test.shape)
+
+    test_data = LoadIKDataset(X_test, y_test)
+
+    test_data_loader = DataLoader(dataset=test_data,
+                                   batch_size=1,
+                                   shuffle=False)
+
+    return test_data_loader 
+
+
+
+
 # train function
 def train(model, iterator, optimizer, criterion, criterion_type, batch_size, device, epoch, EPOCHS):
     epoch_loss = 0
@@ -579,7 +603,7 @@ def evaluate(model, iterator, criterion, criterion_type, device, epoch, EPOCHS):
     return epoch_loss/len(iterator)
 
 # make predictions
-def inference(model, iterator, criterion, device):
+def inference(model, iterator, criterion, device, robot_choice):
     model.eval()
     y_preds = []
     y_desireds = []
@@ -679,7 +703,15 @@ def reconstruct_pose(y_preds, robot_choice):
             #print(T[:3,-1])
             #print(rpy)
             pose.append(torch.cat([T[:3,-1], rpy, t]).numpy())
-          
+        
+        elif robot_choice == "7DoF-7R-Panda":
+            R = T[:3,:3] 
+            rpy = matrix_to_euler_angles(R, "XYZ")
+            # x,y,z,R,P,Y,t1,t2,t3,t4,t5,t6,t7 where x,y,z (m) and t (rad)
+            #print(T[:3,-1])
+            #print(rpy)
+            pose.append(torch.cat([T[:3,-1], rpy, t]).numpy())
+
     X_pred = np.array(pose)
     return X_pred
     
