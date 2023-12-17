@@ -29,9 +29,9 @@ from utils import *
 parser = argparse.ArgumentParser(description="A script with argparse options")
 
 
-parser.add_argument("--runname", type=str, required=False)
-parser.add_argument("--projectname", type=str, required=False)
-parser.add_argument("--robotchoice", type=str, required=True)
+parser.add_argument("--runname", type=str, required=True)
+parser.add_argument("--projectname", type=str, required=True)
+parser.add_argument("--robotchoice", type=str, required=False)
 parser.add_argument("--numgeneration", type=int, default=10)
 parser.add_argument("--batchsize", type=int, default=4)
 parser.add_argument("--savingstep", type=int, default=10)
@@ -77,8 +77,8 @@ if args.seed:
 
 
 
-# robot_choice = "3DoF-3R"
-if arg_robotchoice == "3DoF-3R":
+robot_choice = "3DoF-3R"
+if robot_choice == "3DoF-3R":
     n_DoF = 3
     input_dim = 2
     output_dim = 3
@@ -181,7 +181,7 @@ def fitness_func(ga_instance, solution, sol_idx):
     model.load_state_dict(model_weights_dict)
 
     predictions = model(data_inputs)
-    X_pred = reconstruct_pose(predictions.detach().numpy(), arg_robotchoice)
+    X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
     data_outputs = data_outputs.float()
     X_pred = torch.from_numpy(X_pred)
     # print(X_pred.shape)
@@ -204,7 +204,7 @@ def callback_generation(ga_instance):
     model.load_state_dict(model_weights_dict)
 
     predictions = model(test_data_inputs)
-    X_pred = reconstruct_pose(predictions.detach().numpy(), arg_robotchoice)
+    X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
     test_data_outputs = test_data_outputs.float()
     X_pred = torch.from_numpy(X_pred)
 
@@ -220,14 +220,14 @@ def callback_generation(ga_instance):
 
 
 
-input_layer = torch.nn.Linear(2, 5)
+input_layer = torch.nn.Linear(2, 16)
 relu_layer = torch.nn.ReLU()
 sigmoid_layer = torch.nn.Sigmoid()
-h1 = torch.nn.Linear(5, 10)
-h2 = torch.nn.Linear(10, 20)
-h3 = torch.nn.Linear(20, 16)
-h4 = torch.nn.Linear(16, 5)
-output_layer = torch.nn.Linear(5, 3)
+h1 = torch.nn.Linear(16, 64)
+h2 = torch.nn.Linear(64, 128)
+h3 = torch.nn.Linear(128, 256)
+h4 = torch.nn.Linear(256, 512)
+output_layer = torch.nn.Linear(512, 3)
 
 model = torch.nn.Sequential(input_layer,
                             sigmoid_layer,
@@ -238,7 +238,7 @@ model = torch.nn.Sequential(input_layer,
                             h3,
                             sigmoid_layer,
                             h4,
-                            relu_layer,
+                            sigmoid_layer,
                             output_layer)
 # print(model)
 
