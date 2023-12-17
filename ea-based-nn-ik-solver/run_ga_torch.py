@@ -33,7 +33,6 @@ parser.add_argument("--runname", type=str, required=False)
 parser.add_argument("--projectname", type=str, required=False)
 parser.add_argument("--robotchoice", type=str, required=True)
 parser.add_argument("--numgeneration", type=int, default=10)
-parser.add_argument("--modelname", type=str, required=True)
 parser.add_argument("--batchsize", type=int, default=4)
 parser.add_argument("--savingstep", type=int, default=10)
 parser.add_argument("--epochs", type=int, default=100)
@@ -47,7 +46,6 @@ arg_robotchoice = args.robotchoice
 arg_numgeneration = args.numgeneration
 arg_runname = args.runname
 arg_projectname = args.projectname
-arg_modelname = args.modelname
 arg_savingstep = args.savingstep
 arg_batchsize = args.batchsize
 arg_numsolutions = args.numsolutions
