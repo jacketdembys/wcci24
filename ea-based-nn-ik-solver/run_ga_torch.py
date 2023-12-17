@@ -38,6 +38,8 @@ parser.add_argument("--batchsize", type=int, default=4)
 parser.add_argument("--savingstep", type=int, default=10)
 parser.add_argument("--epochs", type=int, default=100)
 parser.add_argument("--seed", help="Enable verbose mode", action="store_true")
+parser.add_argument("--numsolutions", type=int, default=100)
+parser.add_argument("--numparents", type=int, default=5)
 
 args = parser.parse_args()
 
@@ -47,6 +49,9 @@ arg_runname = args.runname
 arg_projectname = args.projectname
 arg_modelname = args.modelname
 arg_savingstep = args.savingstep
+arg_batchsize = args.batchsize
+arg_numsolutions = args.numsolutions
+arg_numparents = args.numparents
 
 wandb.init(
         # set the wandb project where this run will be logged
@@ -79,7 +84,7 @@ if arg_robotchoice == "3DoF-3R":
     n_DoF = 3
     input_dim = 2
     output_dim = 3
-data = pd.read_csv('datasets/6DoF-6R-Puma260/data_'+arg_robotchoice+'.csv')
+data = pd.read_csv('../data_3DoF-3R_N.csv')
 
 
 
@@ -162,7 +167,9 @@ class LoadIKDataset(Dataset):
 
 
 data_a = np.array(data) 
-train_data_loader, test_data_loader, X_test, y_test, X_train, y_train = load_dataset(data_a, n_DoF)
+train_data_loader, test_data_loader, X_test, y_test, X_train, y_train = load_dataset(data_a, 
+                                                                                     n_DoF,
+                                                                                     batch_size=arg_batchsize)
 
 
 def fitness_func(ga_instance, solution, sol_idx):
@@ -189,9 +196,28 @@ def fitness_func(ga_instance, solution, sol_idx):
     return solution_fitness
 
 def callback_generation(ga_instance):
+    global test_data_inputs, test_data_outputs, torch_ga, model, loss_function, test_error_function
+
+    test_data_inputs = test_data_inputs.float()
+
+    model_weights_dict = torchga.model_weights_as_dict(model=model,
+                                                       weights_vector=ga_instance.best_solution()[0])
+    
+    model.load_state_dict(model_weights_dict)
+
+    predictions = model(test_data_inputs)
+    X_pred = reconstruct_pose(predictions.detach().numpy(), arg_robotchoice)
+    test_data_outputs = test_data_outputs.float()
+    X_pred = torch.from_numpy(X_pred)
+
+    test_error = test_error_function(X_pred, test_data_outputs).detach().numpy()
+
+
+
     print("Generation = {generation}".format(generation=ga_instance.generations_completed))
     print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
     wandb.log({"Metrics/Generation": ga_instance.generations_completed, "Metrics/Fitness": ga_instance.best_solution()[1]})
+    wandb.log({"Metrics/Test_Error": test_error})
 
 
 
@@ -220,9 +246,10 @@ model = torch.nn.Sequential(input_layer,
 
 # Create an instance of the pygad.torchga.TorchGA class to build the initial population.
 torch_ga = torchga.TorchGA(model=model,
-                           num_solutions=10)
+                           num_solutions=arg_numsolutions)
 
-loss_function = torch.nn.L1Loss()
+loss_function = torch.nn.MSELoss()
+test_error_function = torch.nn.L1Loss()
 
 # Data inputs
 
@@ -235,6 +262,9 @@ testing_targets = y_test
 
 data_inputs = torch.from_numpy(training_data)
 data_outputs = torch.from_numpy(training_targets)
+
+test_data_inputs = torch.from_numpy(testing_data)
+test_data_outputs = torch.from_numpy(testing_targets)
 
 # data_inputs = training_data
 # data_outputs = training_targets
@@ -252,7 +282,7 @@ data_outputs = torch.from_numpy(training_targets)
 
 # Prepare the PyGAD parameters. Check the documentation for more information: https://pygad.readthedocs.io/en/latest/pygad.html#pygad-ga-class
 num_generations = arg_numgeneration # Number of generations.
-num_parents_mating = 5 # Number of solutions to be selected as parents in the mating pool.
+num_parents_mating = arg_numparents # Number of solutions to be selected as parents in the mating pool.
 initial_population = torch_ga.population_weights # Initial population of network weights
 
 ga_instance = pygad.GA(num_generations=num_generations, 
@@ -264,21 +294,21 @@ ga_instance = pygad.GA(num_generations=num_generations,
 ga_instance.run()
 
 # After the generations complete, some plots are showed that summarize how the outputs/fitness values evolve over generations.
-ga_instance.plot_fitness(title="PyGAD & PyTorch - Iteration vs. Fitness", linewidth=4)
+# ga_instance.plot_fitness(title="PyGAD & PyTorch - Iteration vs. Fitness", linewidth=4)
 
-# Returning the details of the best solution.
-solution, solution_fitness, solution_idx = ga_instance.best_solution()
-print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
-print("Index of the best solution : {solution_idx}".format(solution_idx=solution_idx))
+# # Returning the details of the best solution.
+# solution, solution_fitness, solution_idx = ga_instance.best_solution()
+# print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
+# print("Index of the best solution : {solution_idx}".format(solution_idx=solution_idx))
 
-# Fetch the parameters of the best solution.
-best_solution_weights = torchga.model_weights_as_dict(model=model,
-                                                      weights_vector=solution)
-model.load_state_dict(best_solution_weights)
-predictions = model(data_inputs)
-print("Predictions : \n", predictions.detach().numpy())
+# # Fetch the parameters of the best solution.
+# best_solution_weights = torchga.model_weights_as_dict(model=model,
+#                                                       weights_vector=solution)
+# model.load_state_dict(best_solution_weights)
+# predictions = model(data_inputs)
+# print("Predictions : \n", predictions.detach().numpy())
 
-abs_error = loss_function(predictions, data_outputs)
-print("Absolute Error : ", abs_error.detach().numpy())
+# abs_error = loss_function(predictions, data_outputs)
+# print("Absolute Error : ", abs_error.detach().numpy())
 
 
