@@ -208,7 +208,7 @@ def callback_generation(ga_instance):
     test_data_outputs = test_data_outputs.float()
     X_pred = torch.from_numpy(X_pred)
 
-    test_error = test_error_function(X_pred, test_data_outputs).detach().numpy()
+    test_error = test_error_function(X_pred, test_data_inputs).detach().numpy()
 
 
 
