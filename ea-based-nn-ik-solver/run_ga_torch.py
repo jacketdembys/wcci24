@@ -82,7 +82,7 @@ if robot_choice == "3DoF-3R":
     n_DoF = 3
     input_dim = 2
     output_dim = 3
-data = pd.read_csv('../data_3DoF-3R_N.csv')
+data = pd.read_csv('./data_3DoF-3R_N.csv')
 
 
 
