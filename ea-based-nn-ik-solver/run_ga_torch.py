@@ -223,11 +223,11 @@ def callback_generation(ga_instance):
 input_layer = torch.nn.Linear(2, 16)
 relu_layer = torch.nn.ReLU()
 sigmoid_layer = torch.nn.Sigmoid()
-h1 = torch.nn.Linear(16, 64)
-h2 = torch.nn.Linear(64, 128)
-h3 = torch.nn.Linear(128, 256)
-h4 = torch.nn.Linear(256, 512)
-output_layer = torch.nn.Linear(512, 3)
+h1 = torch.nn.Linear(16, 32)
+h2 = torch.nn.Linear(32, 64)
+h3 = torch.nn.Linear(64, 32)
+h4 = torch.nn.Linear(32, 16)
+output_layer = torch.nn.Linear(16, 3)
 
 model = torch.nn.Sequential(input_layer,
                             sigmoid_layer,
