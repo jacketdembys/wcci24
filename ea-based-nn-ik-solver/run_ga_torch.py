@@ -196,8 +196,8 @@ def fitness_func(ga_instance, solution, sol_idx):
 def callback_generation(ga_instance):
     global test_data_inputs, test_data_outputs, torch_ga, model, loss_function, test_error_function, arg_savingstep
     print("Generation = {generation}".format(generation=ga_instance.generations_completed))
-    
-    if ga_instance.generations_completed + 1 % arg_savingstep == 0:
+
+    if (int(ga_instance.generations_completed) + 1) % arg_savingstep == 0:
         test_data_inputs = test_data_inputs.float()
 
         model_weights_dict = torchga.model_weights_as_dict(model=model,
