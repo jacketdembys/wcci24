@@ -194,28 +194,30 @@ def fitness_func(ga_instance, solution, sol_idx):
     return solution_fitness
 
 def callback_generation(ga_instance):
-    global test_data_inputs, test_data_outputs, torch_ga, model, loss_function, test_error_function
-
-    test_data_inputs = test_data_inputs.float()
-
-    model_weights_dict = torchga.model_weights_as_dict(model=model,
-                                                       weights_vector=ga_instance.best_solution()[0])
-    
-    model.load_state_dict(model_weights_dict)
-
-    predictions = model(test_data_inputs)
-    X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
-    test_data_outputs = test_data_outputs.float()
-    X_pred = torch.from_numpy(X_pred)
-
-    test_error = test_error_function(X_pred, test_data_inputs).detach().numpy()
-
-
-
+    global test_data_inputs, test_data_outputs, torch_ga, model, loss_function, test_error_function, arg_savingstep
     print("Generation = {generation}".format(generation=ga_instance.generations_completed))
-    print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
-    wandb.log({"Metrics/Generation": ga_instance.generations_completed, "Metrics/Fitness": ga_instance.best_solution()[1]})
-    wandb.log({"Metrics/Test_Error": test_error})
+    
+    if ga_instance.generations_completed + 1 % arg_savingstep == 0:
+        test_data_inputs = test_data_inputs.float()
+
+        model_weights_dict = torchga.model_weights_as_dict(model=model,
+                                                        weights_vector=ga_instance.best_solution()[0])
+        
+        model.load_state_dict(model_weights_dict)
+
+        predictions = model(test_data_inputs)
+        X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
+        test_data_outputs = test_data_outputs.float()
+        X_pred = torch.from_numpy(X_pred)
+
+        test_error = test_error_function(X_pred, test_data_inputs).detach().numpy()
+
+
+
+        
+        print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
+        wandb.log({"Metrics/Generation": ga_instance.generations_completed, "Metrics/Fitness": ga_instance.best_solution()[1]})
+        wandb.log({"Metrics/Test_Error": test_error})
 
 
 
