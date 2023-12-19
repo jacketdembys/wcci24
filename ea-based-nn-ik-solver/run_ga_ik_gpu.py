@@ -183,7 +183,7 @@ def fitness_func(ga_instance, solution, sol_idx):
     model.load_state_dict(model_weights_dict)
 
     predictions = model(data_inputs)
-    X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
+    X_pred = reconstruct_pose(predictions.cpu().detach().numpy(), robot_choice)
     data_outputs = data_outputs.float()
     X_pred = torch.from_numpy(X_pred)
     # print(X_pred.shape)
@@ -209,7 +209,7 @@ def callback_generation(ga_instance):
         model.load_state_dict(model_weights_dict)
 
         predictions = model(test_data_inputs)
-        X_pred = reconstruct_pose(predictions.detach().numpy(), robot_choice)
+        X_pred = reconstruct_pose(predictions.cpu().detach().numpy(), robot_choice)
         test_data_outputs = test_data_outputs.float()
         X_pred = torch.from_numpy(X_pred)
 
