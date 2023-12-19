@@ -12,6 +12,14 @@ from utils import *
 
 """
 
+def custom_loss(pose_pred, pose_true, middle_state, robot_choice, alpha=0.5, beta=0.5):
+    mse_loss = F.mse_loss(pose_pred, pose_true)  # Compute the mean squared error
+    rec_pose = reconstruct_pose(middle_state, robot_choice)
+    reg_mse_loss = F.mse_loss(rec_pose, pose_true)  # L2 regularization term
+    total_loss = alpha * mse_loss + beta * reg_mse_loss  # Combine with a regularization term
+    return total_loss
+
+
 robot_choice = "3DoF-3R"
 mode_choice = "IKFK"
 test_size = 0.2
@@ -32,8 +40,8 @@ my_network = IK_Network(input_size, s1_hidden_list, s2_hidden_list, middle_state
 
 # print("Done!")
 learning_rate = 0.0001
-num_epochs = 200
-criterion = nn.MSELoss()
+num_epochs = 100
+# criterion = nn.MSELoss()
 test_criterion = nn.L1Loss()
 optimizer = optim.Adam(my_network.parameters(), lr=learning_rate)
 
@@ -45,7 +53,7 @@ for epoch in range(num_epochs):
         
         # Forward pass
         outputs, middle_state = my_network(inputs)
-        loss = test_criterion(outputs, labels)
+        loss = custom_loss(outputs, labels, middle_state, robot_choice, alpha=1, beta=0.5)
         
         # Backward pass and optimization
         optimizer.zero_grad()
