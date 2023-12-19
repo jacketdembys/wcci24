@@ -33,7 +33,7 @@ def data_loader(robot_choice, mode_choice, test_size, batch_size, shuffle=False)
 
         if mode_choice == "FK":
 
-            data = pd.read_csv('../ea-based-nn-ik-solver/datasets/6DoF-6R-Puma260/data_3DoF-3R.csv')
+            data = pd.read_csv('../ea-based-nn-ik-solver/data_3DoF-3R_N.csv')
             data = np.array(data).astype(np.float32)
             joints = data[:,-3:]
             pos = data[:,:-3]
@@ -50,7 +50,7 @@ def data_loader(robot_choice, mode_choice, test_size, batch_size, shuffle=False)
         
         if mode_choice == "IK":
 
-            data = pd.read_csv('../ea-based-nn-ik-solver/datasets/6DoF-6R-Puma260/data_3DoF-3R.csv')
+            data = pd.read_csv('../ea-based-nn-ik-solver/data_3DoF-3R_N.csv')
             data = np.array(data).astype(np.float32)
             joints = data[:,-3:]
             pos = data[:,:-3]
@@ -67,7 +67,7 @@ def data_loader(robot_choice, mode_choice, test_size, batch_size, shuffle=False)
         
         if mode_choice == "IKFK":
 
-            data = pd.read_csv('../ea-based-nn-ik-solver/datasets/6DoF-6R-Puma260/data_3DoF-3R.csv')
+            data = pd.read_csv('../ea-based-nn-ik-solver/data_3DoF-3R_N.csv')
             data = np.array(data).astype(np.float32)
             joints = data[:,-3:]
             pos = data[:,:-3]
