@@ -188,7 +188,7 @@ def fitness_func(ga_instance, solution, sol_idx):
     X_pred = torch.from_numpy(X_pred)
     # print(X_pred.shape)
 #     abs_error = loss_function(predictions, data_outputs).detach().numpy() + 0.00000001
-    abs_error = loss_function(X_pred, data_inputs).detach().numpy()
+    abs_error = loss_function(X_pred, data_inputs.cpu()).detach().numpy()
 
 #     solution_fitness = 1.0 / abs_error
     solution_fitness = -abs_error
@@ -213,7 +213,7 @@ def callback_generation(ga_instance):
         test_data_outputs = test_data_outputs.float()
         X_pred = torch.from_numpy(X_pred)
 
-        test_error = test_error_function(X_pred, test_data_inputs).detach().numpy()
+        test_error = test_error_function(X_pred, test_data_inputs.cpu()).detach().numpy()
 
 
 
