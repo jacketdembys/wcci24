@@ -1,6 +1,7 @@
 from model import *
 from data_loading import *
 from utils import *
+import sys
 
 
 """
@@ -14,9 +15,14 @@ from utils import *
 
 def custom_loss(pose_pred, pose_true, middle_state, robot_choice, alpha=0.5, beta=0.5):
     mse_loss = F.mse_loss(pose_pred, pose_true)  # Compute the mean squared error
+    # print(mse_loss)
     rec_pose = reconstruct_pose(middle_state, robot_choice)
+    # print(rec_pose)
     reg_mse_loss = F.mse_loss(rec_pose, pose_true)  # L2 regularization term
+    # print(reg_mse_loss)
     total_loss = alpha * mse_loss + beta * reg_mse_loss  # Combine with a regularization term
+    # print(total_loss)
+    # sys.exit()
     return total_loss
 
 
